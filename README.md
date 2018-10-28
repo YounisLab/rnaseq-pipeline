@@ -23,7 +23,7 @@ docker image build -t rnaseq-pipe .
 ### Without Docker:
 
 ```
-run-pipeline.sh <REF_DIR> <FASTQ_DIR> <STAR_INDEX_DIR> <GENOME_VERSION> <NUM_CORES> <OUTPUT_DIR>
+run-pipeline.sh <REF_DIR> <FASTQ_FILE> <STAR_INDEX_DIR> <GENOME_VERSION> <NUM_CORES> <OUTPUT_DIR>
 
         REF_DIR         Directory containing reference files
         FASTQ_FILE      Path to .fastq files to run through the pipeline

@@ -4,7 +4,7 @@ set -e -u
 
 if [ "$#" -ne "6" ]
 then
-    echo "Usage: run-pipeline.sh <REF_DIR> <FASTQ_DIR> <STAR_INDEX_DIR> <GENOME_VERSION> <NUM_CORES> <OUTPUT_DIR>
+    echo "Usage: run-pipeline.sh <REF_DIR> <FASTQ_FILE> <STAR_INDEX_DIR> <GENOME_VERSION> <NUM_CORES> <OUTPUT_DIR>
 
         REF_DIR         Directory containing reference files
         FASTQ_FILE      Path to .fastq file to run through the pipeline
