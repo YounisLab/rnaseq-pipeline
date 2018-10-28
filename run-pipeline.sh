@@ -7,7 +7,7 @@ then
     echo "Usage: run-pipeline.sh <REF_DIR> <FASTQ_DIR> <STAR_INDEX_DIR> <GENOME_VERSION> <NUM_CORES> <OUTPUT_DIR>
 
         REF_DIR         Directory containing reference files
-        FASTQ_DIR       Directory containing .fastq files to run through the pipeline
+        FASTQ_FILE      Path to .fastq file to run through the pipeline
         STAR_INDEX_DIR  Directory containing STAR indices
         GENOME_VERSION  Human Genome version prefix used in REF_DIR files
         NUM_CORES       Number of CPU cores to use in pipeline.
