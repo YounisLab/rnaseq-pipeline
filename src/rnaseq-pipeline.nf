@@ -9,7 +9,7 @@
  *
  */
 
-// path to fastq file
+// fastq file directory
 params.fastq             = ""
 
 // path to STAR indexes
@@ -39,13 +39,13 @@ params.cores    = 32
 
 process STAR {
         input:
-        file fastq_file from Channel.fromPath( params.fastq  + "/*.fastq")
+        file fastq_file from Channel.fromPath( params.fastq)
 
         publishDir "${params.output_dir}/${fastq_file.baseName}/STAR_OUT", mode: 'link'
 
         output:
         set val(fastq_file), file("${fastq_file.baseName}_Aligned.sortedByCoord.out.bam") into STAR_out_1
-	set val(fastq_file), file("${fastq_file.baseName}_Aligned.sortedByCoord.out.bam") into STAR_out_2
+        set val(fastq_file), file("${fastq_file.baseName}_Aligned.sortedByCoord.out.bam") into STAR_out_2
         set val(fastq_file), file("${fastq_file.baseName}_Aligned.sortedByCoord.out.bam") into STAR_out_3
         file '*' into STAR_DIR
 
