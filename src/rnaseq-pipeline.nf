@@ -27,8 +27,9 @@ params.ref_fasta         = ""
 
 params.output_dir        = ""
 
+params.cores             = ""
+
 params.gene_version = "hg38"
-params.cores    = 32
 
 /*
  * Programmer's note:
