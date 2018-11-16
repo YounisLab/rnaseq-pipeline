@@ -27,8 +27,9 @@ params.ref_fasta         = ""
 
 params.output_dir        = ""
 
+params.cores             = ""
+
 params.gene_version = "hg38"
-params.cores    = 32
 
 /*
  * Programmer's note:
@@ -55,3 +56,34 @@ process STAR {
         """
 }
 
+process regtools {
+        input:
+        file ref_gene_file from Channel.fromPath(params.ref_gene)
+        set val(fastq_file), file(bam_file) from STAR_out_1
+
+        publishDir "${params.output_dir}/${fastq_file.baseName}/", mode: 'link'
+
+        output:
+        file "${fastq_file.baseName}.bed" into REGTOOLS_out_1
+
+        """
+        samtools index $bam_file
+        regtools junctions extract $bam_file -o ${fastq_file.baseName}.bed
+        """
+}
+
+process cufflinks {
+        input:
+        set val(fastq_file), file(bam_file) from STAR_out_2
+
+        publishDir "${params.output_dir}/${fastq_file.baseName}/CUFFLINKS_OUT/", mode: 'link'
+
+        output:
+        file 'genes.fpkm_tracking' into CUFFLINKS_out_1
+        file '*' into CUFFLINKS_DIR
+
+        """
+        cufflinks -p $params.cores -G $params.ref_gene -b $params.ref_fasta -L experiment_descriptor -u $bam_file
+        """
+        
+}
