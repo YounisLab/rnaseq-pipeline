@@ -1,5 +1,17 @@
 # rnaseq-pipeline
 
+A nextflow pipeline for aligning, mapping & estimating abundances of RNASeq data (.bam files). The following are the components of the pipeline:
+
+1. STAR
+2. regtools
+3. Cufflinks
+
+To get started, download the repo using:
+
+`git clone --recursive https://github.com/YounisLab/rnaseq-pipeline`
+
+See the 'Prerequisites' & 'Running' section for install & usage instructions.
+
 ## Prerequisites
 
 If using Docker, the only prerequisite is to install [docker CE](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
