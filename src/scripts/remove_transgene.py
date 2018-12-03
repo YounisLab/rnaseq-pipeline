@@ -24,10 +24,10 @@ args = parser.parse_args()
 
 if not os.path.exists(args.refgene_path):
     print "Reference .bed file does not exist! Exiting..."
-    exit()
+    exit(1)
 if not os.path.exists(args.junctions_path):
     print ".bed file containing junctions does not exist! Exiting..."
-    exit()
+    exit(1)
 
 refgene_bed = open(args.refgene_path)
 
@@ -71,4 +71,4 @@ sp.call(cmd.split(" "), stdout=out_f)
 out_f.close()
 print ">> Cleaning up and exiting gracefully..."
 os.remove(args.outname + "_tmp")
-
+exit(0)

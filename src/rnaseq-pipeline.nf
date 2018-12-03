@@ -67,7 +67,7 @@ process regtools {
         publishDir "${params.output_dir}/${fastq_file.baseName}/", mode: 'link'
 
         output:
-        file "${fastq_file.baseName}.bed" into REGTOOLS_out_1
+        file "${fastq_file.baseName}_clean.bed" into REGTOOLS_out_1
 
         """
         samtools index $bam_file
