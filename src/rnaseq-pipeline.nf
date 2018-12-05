@@ -31,6 +31,9 @@ params.cores             = ""
 
 params.gene_version = "hg38"
 
+// shortcuts to external commands
+remove_transgene = PWD + "/src/scripts/remove_transgene.py"
+
 /*
  * Programmer's note:
  * To publish the output of a pipeline component to an output directory, we use publishDir.
@@ -64,11 +67,12 @@ process regtools {
         publishDir "${params.output_dir}/${fastq_file.baseName}/", mode: 'link'
 
         output:
-        file "${fastq_file.baseName}.bed" into REGTOOLS_out_1
+        file "${fastq_file.baseName}_clean.bed" into REGTOOLS_out_1
 
         """
         samtools index $bam_file
         regtools junctions extract $bam_file -o ${fastq_file.baseName}.bed
+        python $remove_transgene $params.ref_dir/${ref_gene_file.baseName}.bed ${fastq_file.baseName}.bed ${fastq_file.baseName}_clean.bed
         """
 }
 
