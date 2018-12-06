@@ -90,7 +90,7 @@ process cufflinks {
         """
         cufflinks -p $params.cores -G $params.ref_gene -b $params.ref_fasta -L experiment_descriptor -u $bam_file
         """
-        
+
 }
 
 process intron_analysis {
