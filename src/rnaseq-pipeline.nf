@@ -31,6 +31,8 @@ params.cores             = ""
 
 params.gene_version = "hg38"
 
+params.sample_name = ""
+
 // shortcuts to external commands
 remove_transgene = PWD + "/src/scripts/remove_transgene.py"
 splicing_analysis = PWD + "/src/splicing-analysis/splicing-analysis.sh"
@@ -44,18 +46,18 @@ splicing_analysis = PWD + "/src/splicing-analysis/splicing-analysis.sh"
 
 process STAR {
         input:
-        file fastq_file from Channel.fromPath( params.fastq)
+        val fastq_file from Channel.from(params.fastq)
 
-        publishDir "${params.output_dir}/${fastq_file.baseName}/STAR_OUT", mode: 'link'
+        publishDir "${params.output_dir}/${params.sample_name}/STAR_OUT", mode: 'link'
 
         output:
-        set val(fastq_file), file("${fastq_file.baseName}_Aligned.sortedByCoord.out.bam") into STAR_out_1
-        set val(fastq_file), file("${fastq_file.baseName}_Aligned.sortedByCoord.out.bam") into STAR_out_2
-        set val(fastq_file), file("${fastq_file.baseName}_Aligned.sortedByCoord.out.bam") into STAR_out_3
+        file("${params.sample_name}_Aligned.sortedByCoord.out.bam") into STAR_out_1
+        file("${params.sample_name}_Aligned.sortedByCoord.out.bam") into STAR_out_2
+        file("${params.sample_name}_Aligned.sortedByCoord.out.bam") into STAR_out_3
         file '*' into STAR_DIR
 
         """
-        STAR --genomeDir $params.STAR_index --runThreadN $params.cores --readFilesIn $fastq_file --outFileNamePrefix ${fastq_file.baseName}_ \
+        STAR --genomeDir $params.STAR_index --runThreadN $params.cores --readFilesIn $fastq_file --outFileNamePrefix ${params.sample_name}_ \
         --outSAMtype BAM SortedByCoordinate --outSAMstrandField intronMotif
         """
 }
@@ -63,25 +65,25 @@ process STAR {
 process regtools {
         input:
         file ref_gene_file from Channel.fromPath(params.ref_gene)
-        set val(fastq_file), file(bam_file) from STAR_out_1
+        file(bam_file) from STAR_out_1
 
-        publishDir "${params.output_dir}/${fastq_file.baseName}/", mode: 'link'
+        publishDir "${params.output_dir}/${params.sample_name}/", mode: 'link'
 
         output:
-        file "${fastq_file.baseName}_clean.bed" into REGTOOLS_out_1
+        file "${params.sample_name}_clean.bed" into REGTOOLS_out_1
 
         """
         samtools index $bam_file
-        regtools junctions extract $bam_file -o ${fastq_file.baseName}.bed
-        python $remove_transgene $params.ref_dir/${ref_gene_file.baseName}.bed ${fastq_file.baseName}.bed ${fastq_file.baseName}_clean.bed
+        regtools junctions extract $bam_file -o ${params.sample_name}.bed
+        python $remove_transgene $params.ref_dir/${ref_gene_file.baseName}.bed ${params.sample_name}.bed ${params.sample_name}_clean.bed
         """
 }
 
 process cufflinks {
         input:
-        set val(fastq_file), file(bam_file) from STAR_out_2
+        file(bam_file) from STAR_out_2
 
-        publishDir "${params.output_dir}/${fastq_file.baseName}/CUFFLINKS_OUT/", mode: 'link'
+        publishDir "${params.output_dir}/${params.sample_name}/CUFFLINKS_OUT/", mode: 'link'
 
         output:
         file 'genes.fpkm_tracking' into CUFFLINKS_out_1

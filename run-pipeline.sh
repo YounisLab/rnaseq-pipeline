@@ -12,10 +12,11 @@ usage()
                 -G <GENOME_VERSION>  Human Genome version prefix used in REF_DIR files
                 -P <NUM_CORES>       Number of CPU cores to use in pipeline.
                 -O <OUTPUT_DIR>      Directory to save output from pipeline.
+                -S <SAMPLE_NAME>     Prefix name for output files.
             "
 }
 
-OPTIONS=":R:F:I:G:P:O:h"
+OPTIONS=":R:F:I:G:P:O:S:h"
 
 REF_DIR=''
 FASTQ_FILE=''
@@ -23,6 +24,7 @@ STAR_INDEX_DIR=''
 GENOME_VERSION=''
 NUM_CORES=''
 OUTPUT_DIR=''
+SAMPLE_NAME=''
 
 while getopts $OPTIONS opt; do
     case $opt in
@@ -38,6 +40,8 @@ while getopts $OPTIONS opt; do
         NUM_CORES=$OPTARG ;;
     O)
         OUTPUT_DIR=$OPTARG ;;
+    S)
+        SAMPLE_NAME=$OPTARG ;;
     h)
         usage
         exit 0 ;;
@@ -61,7 +65,8 @@ then
 fi
 
 if [[ -z $REF_DIR ]] || [[ -z $FASTQ_FILE ]] || [[ -z $STAR_INDEX_DIR ]] || \
-[[ -z $GENOME_VERSION ]] || [[ -z $NUM_CORES ]] || [[ -z $OUTPUT_DIR ]]
+[[ -z $GENOME_VERSION ]] || [[ -z $NUM_CORES ]] || [[ -z $OUTPUT_DIR ]] ||
+[[ -z $SAMPLE_NAME ]]
 then
     usage
     exit 1
@@ -73,10 +78,10 @@ echo "STAR_INDEX_DIR = $STAR_INDEX_DIR"
 echo "GENOME_VERSION = $GENOME_VERSION"
 echo "NUM_CORES = $NUM_CORES"
 echo "OUTPUT_DIR = $OUTPUT_DIR"
+echo "SAMPLE_NAME = $SAMPLE_NAME"
 
 ref_gene="$REF_DIR/$GENOME_VERSION.refGene_gene_longest.gtf"
 ref_fasta="$REF_DIR/$GENOME_VERSION.fa"
 
-cmd="nextflow run ./src/rnaseq-pipeline.nf --fastq $FASTQ_FILE --STAR_index $STAR_INDEX_DIR --ref_dir $REF_DIR --ref_gene $ref_gene --ref_fasta $ref_fasta --output_dir $OUTPUT_DIR --cores $NUM_CORES"
-echo "Executing $cmd"
+cmd="nextflow run ./src/rnaseq-pipeline.nf --fastq $FASTQ_FILE --STAR_index $STAR_INDEX_DIR --ref_dir $REF_DIR --ref_gene $ref_gene --ref_fasta $ref_fasta --output_dir $OUTPUT_DIR --cores $NUM_CORES --sample_name $SAMPLE_NAME"
 $cmd
