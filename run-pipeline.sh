@@ -4,10 +4,14 @@ set -e -u
 
 usage()
 {
-    echo "Usage: ./run-pipeline.sh -R <REF_DIR> -F <FASTQ_FILE> -I <STAR_INDEX_DIR> -G <GENOME_VERSION> -P <NUM_CORES> -O <OUTPUT_DIR>
+    echo "Usage: ./run-pipeline.sh -R <REF_DIR> -F <FASTQ_FILE> -I <STAR_INDEX_DIR> -G <GENOME_VERSION> -P <NUM_CORES> -O <OUTPUT_DIR> -S <SAMPLE_NAME>
 
                 -R <REF_DIR>         Directory containing reference files
-                -F <FASTQ_FILE>      Path to .fastq file to run through the pipeline
+                -F <FASTQ_FILE>      Path to .fastq file(s) to run through the pipeline.
+                                     Supports paired-ends & replicates.
+                                     Separate paired-ends with spaces & replicates by comma.
+                                     Eg: -F \"pair1_sample1,pair1_sample2...pair1_sampleN pair2_sample1,pair2_sample2...pair2_sampleN\"
+                                     NOTE: MUST BE ENCLOSED IN QUOTES FOR PAIRED-END/REPLICATES.
                 -I <STAR_INDEX_DIR>  Directory containing STAR indices
                 -G <GENOME_VERSION>  Human Genome version prefix used in REF_DIR files
                 -P <NUM_CORES>       Number of CPU cores to use in pipeline.
