@@ -83,5 +83,5 @@ echo "SAMPLE_NAME = $SAMPLE_NAME"
 ref_gene="$REF_DIR/$GENOME_VERSION.refGene_gene_longest.gtf"
 ref_fasta="$REF_DIR/$GENOME_VERSION.fa"
 
-cmd="nextflow run ./src/rnaseq-pipeline.nf --fastq $FASTQ_FILE --STAR_index $STAR_INDEX_DIR --ref_dir $REF_DIR --ref_gene $ref_gene --ref_fasta $ref_fasta --output_dir $OUTPUT_DIR --cores $NUM_CORES --sample_name $SAMPLE_NAME"
+cmd="nextflow run ./src/rnaseq-pipeline.nf --fastq '$FASTQ_FILE' --STAR_index $STAR_INDEX_DIR --ref_dir $REF_DIR --ref_gene $ref_gene --ref_fasta $ref_fasta --output_dir $OUTPUT_DIR --cores $NUM_CORES --sample_name $SAMPLE_NAME"
 $cmd
