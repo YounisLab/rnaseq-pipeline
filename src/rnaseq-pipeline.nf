@@ -33,6 +33,7 @@ params.gene_version = "hg38"
 
 // shortcuts to external commands
 remove_transgene = PWD + "/src/scripts/remove_transgene.py"
+splicing_analysis = PWD + "/src/splicing-analysis/splicing-analysis.sh"
 
 /*
  * Programmer's note:
@@ -90,4 +91,21 @@ process cufflinks {
         cufflinks -p $params.cores -G $params.ref_gene -b $params.ref_fasta -L experiment_descriptor -u $bam_file
         """
         
+}
+
+process intron_analysis {
+        input:
+        set val(fastq_file), file(bam_file) from STAR_out_3
+        file(fpkm_file) from CUFFLINKS_out_1 
+        file(junctions_file) from REGTOOLS_out_1
+
+        publishDir "${params.output_dir}/${fastq_file.baseName}/"
+
+        output:
+        file("${fastq_file.baseName}_intron_analysis.txt") into ANALYSIS_DIR_1
+        file("${fastq_file.baseName}_total_cvg.txt") into ANALYSIS_DIR_2
+
+        """
+        $splicing_analysis $params.ref_dir $bam_file $junctions_file $fpkm_file $params.gene_version $fastq_file.baseName
+        """
 }
