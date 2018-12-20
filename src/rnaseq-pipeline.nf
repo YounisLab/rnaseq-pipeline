@@ -97,17 +97,17 @@ process cufflinks {
 
 process intron_analysis {
         input:
-        set val(fastq_file), file(bam_file) from STAR_out_3
+        file(bam_file) from STAR_out_3
         file(fpkm_file) from CUFFLINKS_out_1 
         file(junctions_file) from REGTOOLS_out_1
 
-        publishDir "${params.output_dir}/${fastq_file.baseName}/"
+        publishDir "${params.output_dir}/${params.sample_name}/", mode: 'link'
 
         output:
-        file("${fastq_file.baseName}_intron_analysis.txt") into ANALYSIS_DIR_1
-        file("${fastq_file.baseName}_total_cvg.txt") into ANALYSIS_DIR_2
+        file("${params.sample_name}_intron_analysis.txt") into ANALYSIS_DIR_1
+        file("${params.sample_name}_total_cvg.txt") into ANALYSIS_DIR_2
 
         """
-        $splicing_analysis $params.ref_dir $bam_file $junctions_file $fpkm_file $params.gene_version $fastq_file.baseName
+        $splicing_analysis $params.ref_dir $bam_file $junctions_file $fpkm_file $params.gene_version $params.sample_name
         """
 }
