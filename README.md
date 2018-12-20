@@ -35,14 +35,18 @@ docker image build -t rnaseq-pipe .
 ### Without Docker:
 
 ```
-run-pipeline.sh <REF_DIR> <FASTQ_FILE> <STAR_INDEX_DIR> <GENOME_VERSION> <NUM_CORES> <OUTPUT_DIR>
+Usage: ./run-pipeline.sh -R <REF_DIR> -F <FASTQ_FILE> -I <STAR_INDEX_DIR> -G <GENOME_VERSION> -P <NUM_CORES> -O <OUTPUT_DIR> -S <SAMPLE_NAME>
 
-        REF_DIR         Directory containing reference files
-        FASTQ_FILE      Path to .fastq files to run through the pipeline
-        STAR_INDEX_DIR  Directory containing STAR indices
-        GENOME_VERSION  Human Genome version prefix used in REF_DIR files
-        NUM_CORES       Number of CPU cores to use in pipeline.
-        OUTPUT_DIR      Directory to save output from pipeline.
+                -R <REF_DIR>         Directory containing reference files
+                -F <FASTQ_FILE>      Path to .fastq file(s) to run through the pipeline.
+                                     Separate paired-ends with spaces & replicates by comma.
+                                     Eg: -F \"pair1_sample1,pair1_sample2...pair1_sampleN pair2_sample1,pair2_sample2...pair2_sampleN\"
+                                     NOTE: MUST BE ENCLOSED IN QUOTES FOR PAIRED-END/REPLICATES.
+                -I <STAR_INDEX_DIR>  Directory containing STAR indices
+                -G <GENOME_VERSION>  Human Genome version prefix used in REF_DIR files
+                -P <NUM_CORES>       Number of CPU cores to use in pipeline.
+                -O <OUTPUT_DIR>      Directory to save output from pipeline.
+                -S <SAMPLE_NAME>     Prefix name for output files.
 
 ```
 

@@ -31,6 +31,8 @@ params.cores             = ""
 
 params.gene_version = "hg38"
 
+params.sample_name = ""
+
 // shortcuts to external commands
 remove_transgene = PWD + "/src/scripts/remove_transgene.py"
 splicing_analysis = PWD + "/src/splicing-analysis/splicing-analysis.sh"
@@ -44,18 +46,18 @@ splicing_analysis = PWD + "/src/splicing-analysis/splicing-analysis.sh"
 
 process STAR {
         input:
-        file fastq_file from Channel.fromPath( params.fastq)
+        val fastq_file from Channel.from(params.fastq)
 
-        publishDir "${params.output_dir}/${fastq_file.baseName}/STAR_OUT", mode: 'link'
+        publishDir "${params.output_dir}/${params.sample_name}/STAR_OUT", mode: 'link'
 
         output:
-        set val(fastq_file), file("${fastq_file.baseName}_Aligned.sortedByCoord.out.bam") into STAR_out_1
-        set val(fastq_file), file("${fastq_file.baseName}_Aligned.sortedByCoord.out.bam") into STAR_out_2
-        set val(fastq_file), file("${fastq_file.baseName}_Aligned.sortedByCoord.out.bam") into STAR_out_3
+        file("${params.sample_name}_Aligned.sortedByCoord.out.bam") into STAR_out_1
+        file("${params.sample_name}_Aligned.sortedByCoord.out.bam") into STAR_out_2
+        file("${params.sample_name}_Aligned.sortedByCoord.out.bam") into STAR_out_3
         file '*' into STAR_DIR
 
         """
-        STAR --genomeDir $params.STAR_index --runThreadN $params.cores --readFilesIn $fastq_file --outFileNamePrefix ${fastq_file.baseName}_ \
+        STAR --genomeDir $params.STAR_index --runThreadN $params.cores --readFilesIn $fastq_file --outFileNamePrefix ${params.sample_name}_ \
         --outSAMtype BAM SortedByCoordinate --outSAMstrandField intronMotif
         """
 }
@@ -63,25 +65,25 @@ process STAR {
 process regtools {
         input:
         file ref_gene_file from Channel.fromPath(params.ref_gene)
-        set val(fastq_file), file(bam_file) from STAR_out_1
+        file(bam_file) from STAR_out_1
 
-        publishDir "${params.output_dir}/${fastq_file.baseName}/", mode: 'link'
+        publishDir "${params.output_dir}/${params.sample_name}/", mode: 'link'
 
         output:
-        file "${fastq_file.baseName}_clean.bed" into REGTOOLS_out_1
+        file "${params.sample_name}_clean.bed" into REGTOOLS_out_1
 
         """
         samtools index $bam_file
-        regtools junctions extract $bam_file -o ${fastq_file.baseName}.bed
-        python $remove_transgene $params.ref_dir/${ref_gene_file.baseName}.bed ${fastq_file.baseName}.bed ${fastq_file.baseName}_clean.bed
+        regtools junctions extract $bam_file -o ${params.sample_name}.bed
+        python $remove_transgene $params.ref_dir/${ref_gene_file.baseName}.bed ${params.sample_name}.bed ${params.sample_name}_clean.bed
         """
 }
 
 process cufflinks {
         input:
-        set val(fastq_file), file(bam_file) from STAR_out_2
+        file(bam_file) from STAR_out_2
 
-        publishDir "${params.output_dir}/${fastq_file.baseName}/CUFFLINKS_OUT/", mode: 'link'
+        publishDir "${params.output_dir}/${params.sample_name}/CUFFLINKS_OUT/", mode: 'link'
 
         output:
         file 'genes.fpkm_tracking' into CUFFLINKS_out_1
@@ -90,22 +92,22 @@ process cufflinks {
         """
         cufflinks -p $params.cores -G $params.ref_gene -b $params.ref_fasta -L experiment_descriptor -u $bam_file
         """
-        
+
 }
 
 process intron_analysis {
         input:
-        set val(fastq_file), file(bam_file) from STAR_out_3
+        file(bam_file) from STAR_out_3
         file(fpkm_file) from CUFFLINKS_out_1 
         file(junctions_file) from REGTOOLS_out_1
 
-        publishDir "${params.output_dir}/${fastq_file.baseName}/"
+        publishDir "${params.output_dir}/${params.sample_name}/", mode: 'link'
 
         output:
-        file("${fastq_file.baseName}_intron_analysis.txt") into ANALYSIS_DIR_1
-        file("${fastq_file.baseName}_total_cvg.txt") into ANALYSIS_DIR_2
+        file("${params.sample_name}_intron_analysis.txt") into ANALYSIS_DIR_1
+        file("${params.sample_name}_total_cvg.txt") into ANALYSIS_DIR_2
 
         """
-        $splicing_analysis $params.ref_dir $bam_file $junctions_file $fpkm_file $params.gene_version $fastq_file.baseName
+        $splicing_analysis $params.ref_dir $bam_file $junctions_file $fpkm_file $params.gene_version $params.sample_name
         """
 }
