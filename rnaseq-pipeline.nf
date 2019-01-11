@@ -64,7 +64,7 @@ Channel
         publishDir "${params.output_dir}/$sample/STAR", mode: 'copy'
 
         output:
-        file '${sample}_Aligned.sortedByCoord.out.bam' into bam_for_regtools
+        file "${sample}_Aligned.sortedByCoord.out.bam" into bam_for_regtools
         file '*' into STAR_DIR // Publish all files
 
         script:
