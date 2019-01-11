@@ -65,7 +65,7 @@ Channel
 
         output:
         set val(sample), file("${sample}_Aligned.sortedByCoord.out.bam") into \
-            bam_for_regtools, bam_for_stringtie
+            bam_for_regtools, bam_for_stringtie, bam_for_intron_analysis
         file '*' into STAR_DIR // Publish all files
 
         script:
@@ -111,5 +111,23 @@ process stringtie {
     script:
     """
     stringtie -e -p 32 -A ${sample}_gene_abund.tab -G $ref_gene_gtf -o ${sample}_assembly.gtf $bam_file
+    """
+}
+
+process intron_analysis {
+    input:
+    set val(sample), file(bam_file) from bam_for_intron_analysis
+    file fpkm from fpkm_for_intron_analysis
+    file junc_bed from bed_for_intron_analysis
+    file ref_dir from Channel.fromPath(params.ref_dir)
+
+    publishDir "${params.output_dir}/$sample/intron_analysis", mode: 'copy'
+
+    script:
+    """
+    echo "===> Computing coverage..."
+    compute_coverage.sh $ref_dir $bam_file $junc_bed $params.genome $sample
+    echo "===> Performing analysis..."
+    analyze.py $ref_dir $fpkm $params.genome $params.sample_name
     """
 }
