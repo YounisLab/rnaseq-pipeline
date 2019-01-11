@@ -48,6 +48,41 @@ def helpMessage() {
     """
 }
 
+if (params.help) {
+    helpMessage()
+    exit 0
+}
+
+if (!params.ref_dir) {
+    helpMessage()
+    exit 1, "REF_DIR not specified."
+}
+
+if (!params.fastq_dir) {
+    helpMessage()
+    exit 1, "FASTQ_DIR not specified."
+}
+
+if (!params.star_index) {
+    helpMessage()
+    exit 1, "STAR_INDEX_DIR not specified."
+}
+
+if (!params.genome) {
+    helpMessage()
+    exit 1, "GENOME_VERSION not specified."
+}
+
+if (!params.cores) {
+    helpMessage()
+    exit 1, "NUM_CORES not specified."
+}
+
+if (!params.output_dir) {
+    helpMessage()
+    exit 1, "OUTPUT_DIR not specified."
+}
+
 Channel
     .fromFilePairs(params.fastq_dir +'/*[A-Z]_R{1,2}.fastq', size: -1)
     .map { key, files -> [key,
