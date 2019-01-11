@@ -64,7 +64,8 @@ Channel
         publishDir "${params.output_dir}/$sample/STAR", mode: 'copy'
 
         output:
-        set val(sample), file("${sample}_Aligned.sortedByCoord.out.bam") into bam_for_regtools
+        set val(sample), file("${sample}_Aligned.sortedByCoord.out.bam") into
+            bam_for_regtools, bam_for_stringtie
         file '*' into STAR_DIR // Publish all files
 
         script:
@@ -94,5 +95,21 @@ process regtools {
     samtools index $bam_file
     regtools junctions extract $bam_file -o ${sample}.bed
     remove_transgene.py $ref_gene_bed ${sample}.bed ${sample}_clean.bed
+    """
+}
+
+process stringtie {
+    input:
+    set val(sample), file(bam_file) from bam_for_sringtie
+    file ref_gene_gtf from Channel.fromPath(params.ref_dir + "/" + params.genome + ".refGene_gene_longest.gtf")
+
+    publishDir "${params.output_dir}/$sample/stringtie", mode: 'copy'
+
+    output:
+    file "${sample}_gene_abund.tab" into fpkm_for_intron_analysis
+
+    script:
+    """
+    stringtie -e -p 32 -A ${sample}_gene_abund.tab -G $ref_gene_gtf -o ${sample}_assembly.gtf $bam_file
     """
 }
