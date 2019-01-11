@@ -128,6 +128,6 @@ process intron_analysis {
     echo "===> Computing coverage..."
     compute_coverage.sh $ref_dir $bam_file $junc_bed $params.genome $sample
     echo "===> Performing analysis..."
-    analyze.py $ref_dir $fpkm $params.genome $params.sample_name
+    analyze.py $ref_dir $fpkm $params.genome $sample
     """
 }
