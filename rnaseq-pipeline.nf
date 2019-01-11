@@ -64,7 +64,7 @@ Channel
         publishDir "${params.output_dir}/$sample/STAR", mode: 'copy'
 
         output:
-        set val(sample), file("${sample}_Aligned.sortedByCoord.out.bam") into
+        set val(sample), file("${sample}_Aligned.sortedByCoord.out.bam") into \
             bam_for_regtools, bam_for_stringtie
         file '*' into STAR_DIR // Publish all files
 
@@ -100,7 +100,7 @@ process regtools {
 
 process stringtie {
     input:
-    set val(sample), file(bam_file) from bam_for_sringtie
+    set val(sample), file(bam_file) from bam_for_stringtie
     file ref_gene_gtf from Channel.fromPath(params.ref_dir + "/" + params.genome + ".refGene_gene_longest.gtf")
 
     publishDir "${params.output_dir}/$sample/stringtie", mode: 'copy'
