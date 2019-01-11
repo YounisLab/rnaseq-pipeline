@@ -81,18 +81,18 @@ Channel
 
 process regtools {
     input:
-    file ref_gene_file from Channel.fromPath(params.ref_dir + "/" + params.genome + ".refGene_gene_longest.gtf")
+    file ref_gene_bed from Channel.fromPath(params.ref_dir + "/" + params.genome + ".refGene_gene_longest.bed")
     set val(sample), file(bam_file) from bam_for_regtools
-    file ref_dir from Channel.fromPath(params.ref_dir)
 
     publishDir "${params.output_dir}/$sample/regtools", mode: 'copy'
 
     output:
     file "${sample}_clean.bed" into bed_for_intron_analysis
 
+    script:
     """
     samtools index $bam_file
     regtools junctions extract $bam_file -o ${sample}.bed
-    remove_transgene.py $ref_dir/${ref_gene_file.baseName}.bed ${sample}.bed ${sample}_clean.bed
+    remove_transgene.py $ref_gene_bed ${sample}.bed ${sample}_clean.bed
     """
 }
