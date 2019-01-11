@@ -93,6 +93,6 @@ process regtools {
     """
     samtools index $bam_file
     regtools junctions extract $bam_file -o ${sample}.bed
-    ./remove_transgene.py $ref_dir/${ref_gene_file.baseName}.bed ${sample}.bed ${sample}_clean.bed
+    remove_transgene.py $ref_dir/${ref_gene_file.baseName}.bed ${sample}.bed ${sample}_clean.bed
     """
 }
