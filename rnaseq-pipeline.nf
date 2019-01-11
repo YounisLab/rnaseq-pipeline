@@ -50,7 +50,9 @@ def helpMessage() {
 
 Channel
     .fromFilePairs(params.fastq_dir +'/*[A-Z]_R{1,2}.fastq', size: -1)
-    .map { key, files -> [key, files.findAll { it.toString().endsWith('R1.fastq') }, files.findAll { it.toString().endsWith('R2.fastq') }] }
+    .map { key, files -> [key,
+                          files.findAll { it.toString().endsWith('R1.fastq') },
+                          files.findAll { it.toString().endsWith('R2.fastq') }] }
     .ifEmpty { exit 1, "Cannot find any reads matching the glob!"}
     .into {raw_reads_fastq}
 
@@ -61,7 +63,8 @@ Channel
         publishDir "${params.output_dir}/$sample/STAR", mode: 'copy'
 
         output:
-        file '*' into STAR_DIR // For publishDir to publish everything
+        file '${sample}_Aligned.sortedByCoord.out.bam' into bam_for_regtools
+        file '*' into STAR_DIR // Publish all files
 
         script:
         """
@@ -73,4 +76,21 @@ Channel
         STAR --genomeDir $params.star_index --runThreadN $params.cores --readFilesIn \$READS1 \$READS2 --outFileNamePrefix ${sample}_ \
         --outSAMtype BAM SortedByCoordinate --outSAMstrandField intronMotif
         """
+}
+
+process regtools {
+    input:
+    file ref_gene_file from Channel.fromPath(params.ref_dir + "/" + params.genome + ".refGene_gene_longest.gtf")
+    file bam_file from bam_for_regtools
+
+    publishDir "${params.output_dir}/$sample/regtools", mode: 'copy'
+
+    output:
+    file "${sample}_clean.bed" into bed_for_intron_analysis
+
+    """
+    samtools index $bam_file
+    regtools junctions extract $bam_file -o ${params.sample}.bed
+    ./remove_transgene.py $params.ref_dir/${ref_gene_file.baseName}.bed ${params.sample}.bed ${params.sample}_clean.bed
+    """
 }
