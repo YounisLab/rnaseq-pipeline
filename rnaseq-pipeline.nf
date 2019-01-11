@@ -54,7 +54,7 @@ Channel
                           files.findAll { it.toString().endsWith('R1.fastq') },
                           files.findAll { it.toString().endsWith('R2.fastq') }] }
     .ifEmpty { exit 1, "Cannot find any reads matching the glob!"}
-    .into {raw_reads_fastq}
+    .set {raw_reads_fastq}
 
  process STAR {
         input:
