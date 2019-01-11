@@ -158,6 +158,10 @@ process intron_analysis {
 
     publishDir "${params.output_dir}/$sample/intron_analysis", mode: 'copy'
 
+    output:
+    set file("${sample}_intron_analysis.txt"), \
+        file("${sample}_total_cvg.txt") into INTRON_ANALYSIS_DIR
+
     script:
     """
     echo "===> Computing coverage..."
