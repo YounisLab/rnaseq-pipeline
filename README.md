@@ -35,6 +35,9 @@ Usage: nextflow run rnaseq-pipeline.nf [OPTIONS] --ref_dir <REF_DIR> --fastq_dir
                               Example:
                                     SAMPLE_A.fastq SAMPLE_B.fastq SAMPLE_C.fastq SAMPLE_D.fastq
 
+                                    This will be run in STAR as:
+                                    --readFilesIn SAMPLE_A.fastq,SAMPLE_B.fastq,SAMPLE_C.fastq,SAMPLE_D.fastq
+
             --no_replicates   Specifies that each .fastq file in the input directory
                               should be run through the pipeline individually.
 
@@ -46,6 +49,9 @@ Usage: nextflow run rnaseq-pipeline.nf [OPTIONS] --ref_dir <REF_DIR> --fastq_dir
 
                               Example:
                                     SAMPLE_A_R1.fastq SAMPLE_A_R2.fastq SAMPLE_B_R1.fastq SAMPLE_B_R2.fastq
+
+                                    This will be run in STAR as:
+                                    --readFilesIn SAMPLE_A_R1,SAMPLE_B_R1.fastq SAMPLE_A_R2.fastq,SAMPLE_B_R2.fastq
 
                               Here 'SAMPLE_A_R1.fastq' and 'SAMPLE_A_R2.fastq' are paired end reads, while
                               'SAMPLE_A_R1.fastq' and 'SAMPLE_B_R1.fastq' are statistical replicates
