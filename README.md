@@ -4,7 +4,8 @@ A nextflow pipeline for aligning, mapping & estimating abundances of RNASeq data
 
 1. STAR
 2. regtools
-3. Cufflinks
+3. stringtie
+4. [intron_analysis](https://github.com/YounisLab/splicing-analysis)
 
 To get started, download the repo using:
 
@@ -14,50 +15,51 @@ See the 'Prerequisites' & 'Running' section for install & usage instructions.
 
 ## Prerequisites
 
-If using Docker, the only prerequisite is to install [docker CE](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
-
-If using outside of Docker, the requirements can be installed using
-
-```
-conda install -c bioconda --yes --file requirements.txt
-```
+Install [docker CE](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
 
 ## Building
 
 ```
-docker image build -t rnaseq-pipe .
+git clone https://github.com/YounisLab/splicing-analysis
+cd splicing-analysis
+docker image build -t splicing-analysis .
+cd ../
+git clone https://github.com/YounisLab/rnaseq-pipeline
+cd rnaseq-pipeline
+docker image build -t rnaseq-pipeline .
 ```
 
 ## Running
 
-`rnaseq-pipeline` can be run with and without Docker, though the latter is recommended.
+```
+    Usage: nextflow run [OPTION] --ref_dir <REF_DIR> --fastq_dir <FASTQ_DIR> --star_index <STAR_INDEX_DIR> --genome <GENOME_VERSION> --cores <NUM_CORES> --output_dir <OUTPUT_DIR>
+            Optional args:
+                --single_end      Specifies that the --fastq_files input contained single end reads only.
+                                  If enabled, files in the --fastq_files directory must be of the form
+                                  '<SAMPLENAME>_[A-Z].fastq', where [A-Z] refers to statistical replicates.
 
-### Without Docker:
+                                  Example:
+                                    SAMPLE_A.fastq SAMPLE_B.fastq SAMPLE_C.fastq SAMPLE_D.fastq
+
+                --no_replicates   Specifies that each .fastq file in the input directory
+                                  should be run through the pipeline individually.
+
+            Mandatory args:
+                <REF_DIR>         Directory containing reference files
+                <FASTQ_DIR>       Directory containing .fastq file(s) to run through the pipeline.
+                                    Files in this directory must be of the form '<SAMPLENAME>_[A-Z]_R{1,2}.fastq',
+                                    where [A-Z] refers to statistical replicates and R{1,2} refers to paired-ends.
+
+                                    Example:
+                                        SAMPLE_A_R1.fastq SAMPLE_A_R2.fastq SAMPLE_B_R1.fastq SAMPLE_B_R2.fastq
+
+                                    Here 'BL9_A_R1.fastq' and 'BL9_A_R2.fastq' are paired end reads, while
+                                    'BL9_A_R1.fastq' and 'BL9_B_R1.fastq' are statistical replicates
+                                    belonging to the same paired end read.
+
+                <STAR_INDEX_DIR>  Directory containing STAR indices
+                <GENOME_VERSION>  Human Genome version prefix used in REF_DIR files
+                <NUM_CORES>       Number of CPU cores to use in pipeline.
+                <OUTPUT_DIR>      Directory to save output from pipeline.
 
 ```
-Usage: ./run-pipeline.sh -R <REF_DIR> -F <FASTQ_FILE> -I <STAR_INDEX_DIR> -G <GENOME_VERSION> -P <NUM_CORES> -O <OUTPUT_DIR> -S <SAMPLE_NAME>
-
-                -R <REF_DIR>         Directory containing reference files
-                -F <FASTQ_FILE>      Path to .fastq file(s) to run through the pipeline.
-                                     Separate paired-ends with spaces & replicates by comma.
-                                     Eg: -F \"pair1_sample1,pair1_sample2...pair1_sampleN pair2_sample1,pair2_sample2...pair2_sampleN\"
-                                     NOTE: MUST BE ENCLOSED IN QUOTES FOR PAIRED-END/REPLICATES.
-                -I <STAR_INDEX_DIR>  Directory containing STAR indices
-                -G <GENOME_VERSION>  Human Genome version prefix used in REF_DIR files
-                -P <NUM_CORES>       Number of CPU cores to use in pipeline.
-                -O <OUTPUT_DIR>      Directory to save output from pipeline.
-                -S <SAMPLE_NAME>     Prefix name for output files.
-
-```
-
-
-### With Docker:
-
-## Development using Docker
-
-```
-docker run -it --rm -v $PWD:/home/ rnaseq-pipe
-```
-
-This maps the current directory to a folder inside the container. This makes it
-so that there is no need to re-build the image upon making source code changes.
