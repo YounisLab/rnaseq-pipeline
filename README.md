@@ -7,12 +7,6 @@ A nextflow pipeline for aligning, mapping & estimating abundances of RNASeq data
 3. stringtie
 4. [intron_analysis](https://github.com/YounisLab/splicing-analysis)
 
-To get started, download the repo using:
-
-`git clone --recursive https://github.com/YounisLab/rnaseq-pipeline`
-
-See the 'Prerequisites' & 'Running' section for install & usage instructions.
-
 ## Prerequisites
 
 Install [docker CE](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
