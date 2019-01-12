@@ -53,8 +53,8 @@ Usage: nextflow run rnaseq-pipeline.nf [OPTIONS] --ref_dir <REF_DIR> --fastq_dir
                               Example:
                                     SAMPLE_A_R1.fastq SAMPLE_A_R2.fastq SAMPLE_B_R1.fastq SAMPLE_B_R2.fastq
 
-                              Here 'BL9_A_R1.fastq' and 'BL9_A_R2.fastq' are paired end reads, while
-                              'BL9_A_R1.fastq' and 'BL9_B_R1.fastq' are statistical replicates
+                              Here 'SAMPLE_A_R1.fastq' and 'SAMPLE_A_R2.fastq' are paired end reads, while
+                              'SAMPLE_A_R1.fastq' and 'SAMPLE_B_R1.fastq' are statistical replicates
                               belonging to the same paired end read.
 
             <STAR_INDEX_DIR>  Directory containing STAR indices
