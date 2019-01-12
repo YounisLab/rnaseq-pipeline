@@ -84,7 +84,7 @@ if (!params.output_dir) {
 }
 
 Channel
-    .fromFilePairs(params.fastq_dir +'/*[A-Z]_R{1,2}.fastq', size: -1)
+    .fromFilePairs(params.fastq_dir +'/*_[A-Z]_R{1,2}.fastq', size: -1)
     .map { key, files -> [key,
                           files.findAll { it.toString().endsWith('R1.fastq') },
                           files.findAll { it.toString().endsWith('R2.fastq') }] }
