@@ -16,7 +16,7 @@ params.output_dir = null
 
 def helpMessage() {
     log.info """
-    Usage: ./run-pipeline.sh [OPTION] --ref_dir <REF_DIR> --fastq_dir <FASTQ_DIR> --star_index <STAR_INDEX_DIR> --genome <GENOME_VERSION> --cores <NUM_CORES> --output_dir <OUTPUT_DIR>
+    Usage: nextflow run [OPTION] --ref_dir <REF_DIR> --fastq_dir <FASTQ_DIR> --star_index <STAR_INDEX_DIR> --genome <GENOME_VERSION> --cores <NUM_CORES> --output_dir <OUTPUT_DIR>
             Optional args:
                 --single_end      Specifies that the --fastq_files input contained single end reads only.
                                   If enabled, files in the --fastq_files directory must be of the form
