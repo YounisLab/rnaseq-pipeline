@@ -44,7 +44,7 @@ Usage: nextflow run rnaseq-pipeline.nf [OPTIONS] --ref_dir <REF_DIR> --fastq_dir
     Mandatory args:
         <REF_DIR>         Directory containing reference files
         <FASTQ_DIR>       Directory containing .fastq file(s) to run through the pipeline.
-                          Unless --single_end or --no_replicates is specified, files in this directory
+                          Unless --single_end is specified, files in this directory
                           must be of the form '<SAMPLENAME>_[A-Z]_R{1,2}.fastq',
                           where [A-Z] refers to statistical replicates and R{1,2} refers to paired-ends.
 
