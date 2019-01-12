@@ -18,7 +18,7 @@ def helpMessage() {
     log.info """
 Usage: nextflow run rnaseq-pipeline.nf [OPTIONS] --ref_dir <REF_DIR> --fastq_dir <FASTQ_DIR> --star_index <STAR_INDEX_DIR> --genome <GENOME_VERSION> --cores <NUM_CORES> --output_dir <OUTPUT_DIR>
         Optional args:
-            --single_end      Specifies that the --fastq_files input contained single end reads only.
+            --single_end      Specifies that the --fastq_dir input contains single end reads only.
                               If enabled, files in the --fastq_files directory must be of the form
                               '<SAMPLENAME>_[A-Z].fastq', where [A-Z] refers to statistical replicates.
 
