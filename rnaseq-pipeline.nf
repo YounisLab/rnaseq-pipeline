@@ -89,12 +89,14 @@ if (params.single_end && params.no_replicates) {
 } else if (params.single_end) {
     Channel
         .fromFilePairs(params.fastq_dir +'/*_[A-Z].fastq', size: -1)
+        //map adds third entry value to maintain consistent cardinality
+        .map { key, files -> [key, files, 0]}
         .ifEmpty { exit 1, "Cannot find any reads matching the glob!"}
         .set {raw_reads_fastq}
 } else if (params.no_replicates) {
     Channel
         .fromPath(params.fastq_dir +'*.fastq')
-        .map {file -> [file.baseName, file]}
+        .map {file -> [file.baseName, file, 0]}
         .ifEmpty { exit 1, "Cannot find any files in directory!"}
         .set {raw_reads_fastq}} else {
     Channel
