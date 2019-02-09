@@ -112,7 +112,7 @@ if (params.single_end && params.no_replicates) {
 process STAR {
         input:
         set val(sample), file(reads1), file(reads2) from raw_reads_fastq
-        file star_index from Channel.fromPath(params.star_index)
+        file star_index from Channel.fromPath(params.star_index).collect()
 
         publishDir "${params.output_dir}/$sample/STAR", mode: 'copy'
 
@@ -143,7 +143,7 @@ process STAR {
 
 process regtools {
     input:
-    file ref_gene_bed from Channel.fromPath(params.ref_dir + "/" + params.genome + ".refGene_gene_longest.bed")
+    file ref_gene_bed from Channel.fromPath(params.ref_dir + "/" + params.genome + ".refGene_gene_longest.bed").collect()
     set val(sample), file(bam_file) from bam_for_regtools
 
     publishDir "${params.output_dir}/$sample/regtools", mode: 'copy'
@@ -162,7 +162,7 @@ process regtools {
 process stringtie {
     input:
     set val(sample), file(bam_file) from bam_for_stringtie
-    file ref_gene_gtf from Channel.fromPath(params.ref_dir + "/" + params.genome + ".refGene_gene_longest.gtf")
+    file ref_gene_gtf from Channel.fromPath(params.ref_dir + "/" + params.genome + ".refGene_gene_longest.gtf").collect()
 
     publishDir "${params.output_dir}/$sample/stringtie", mode: 'copy'
 
@@ -180,7 +180,7 @@ process intron_analysis {
     set val(sample), file(bam_file) from bam_for_intron_analysis
     file fpkm from fpkm_for_intron_analysis
     file junc_bed from bed_for_intron_analysis
-    file ref_dir from Channel.fromPath(params.ref_dir)
+    file ref_dir from Channel.fromPath(params.ref_dir).collect()
 
     publishDir "${params.output_dir}/$sample/intron_analysis", mode: 'copy'
 
