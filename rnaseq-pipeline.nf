@@ -122,22 +122,14 @@ process STAR {
         file '*' into STAR_DIR // Publish all files
 
         script:
-        if (params.single_end)
-        """
-        STR1="$reads1"
-        READS1=\$(echo \${STR1// /,})
-        STAR --genomeDir $star_index --runThreadN $params.cores --readFilesIn \$READS1 --outFileNamePrefix ${sample}_ \
-                --outSAMtype BAM SortedByCoordinate --outSAMstrandField intronMotif
-        """
-
-        else if (params.no_replicates)
+        if (params.single_end || params.no_replicates)
         """
         STR1="$reads1"
         READS1=\$(echo \${STR1// /,})
         STAR --genomeDir $star_index --runThreadN $params.cores --readFilesIn \$READS1 --outFileNamePrefix ${sample}_ \
         --outSAMtype BAM SortedByCoordinate --outSAMstrandField intronMotif
         """
-
+        
         else
         """
         STR1="$reads1"
