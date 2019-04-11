@@ -4,3 +4,4 @@ samtools==1.9
 bedtools==2.27
 cufflinks==2.2.1
 stringtie==1.3.4
+ucsc-bedgraphtobigwig==357
