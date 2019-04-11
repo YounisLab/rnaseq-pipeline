@@ -148,7 +148,7 @@ process regtools {
     set val(sample), file(bam_file) from bam_for_regtools
 
     publishDir "${params.output_dir}/$sample/regtools", mode: 'copy'
-    publishDir "${params.output_dir}/$sample/UCSC", mode: 'copy'
+    publishDir "${params.output_dir}/$sample/UCSC_browser", mode: 'copy'
 
     output:
     file "${sample}.bed" into bed_for_intron_analysis
@@ -205,7 +205,7 @@ process bam2bigwig {
     set val(sample), file(bam_file) from bam_for_bam2bigwig
     file ref_chrom_sizes from Channel.fromPath(params.ref_dir + "/" + params.genome + ".chrom.sizes").collect()
 
-    publishDir "${params.output_dir}/$sample/UCSC", mode: 'copy'
+    publishDir "${params.output_dir}/$sample/UCSC_browser", mode: 'copy'
 
     output:
     file("${sample}.bw") into BAM2BIGIWG_DIR
