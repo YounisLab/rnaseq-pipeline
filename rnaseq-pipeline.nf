@@ -129,7 +129,7 @@ process STAR {
         STAR --genomeDir $star_index --runThreadN $params.cores --readFilesIn \$READS1 --outFileNamePrefix ${sample}_ \
         --outSAMtype BAM SortedByCoordinate --outSAMstrandField intronMotif
         """
-        
+
         else
         """
         STR1="$reads1"
