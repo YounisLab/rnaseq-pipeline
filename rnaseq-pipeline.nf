@@ -118,7 +118,8 @@ process STAR {
 
         output:
         set val(sample), file("${sample}_Aligned.sortedByCoord.out.bam") into \
-            bam_for_regtools, bam_for_stringtie, bam_for_intron_analysis
+            bam_for_regtools, bam_for_stringtie, \
+            bam_for_intron_analysis, bam_for_bam2bigwig
         file '*' into STAR_DIR // Publish all files
 
         script:
@@ -147,15 +148,17 @@ process regtools {
     set val(sample), file(bam_file) from bam_for_regtools
 
     publishDir "${params.output_dir}/$sample/regtools", mode: 'copy'
+    publishDir "${params.output_dir}/$sample/UCSC", mode: 'copy'
 
     output:
-    file "${sample}_clean.bed" into bed_for_intron_analysis
+    file "${sample}.bed" into bed_for_intron_analysis
 
     script:
     """
     samtools index $bam_file
     regtools junctions extract $bam_file -o ${sample}.bed
     remove_transgene.py $ref_gene_bed ${sample}.bed ${sample}_clean.bed
+    mv ${sample}_clean.bed ${sample}.bed
     """
 }
 
@@ -194,5 +197,21 @@ process intron_analysis {
     compute_coverage.sh $ref_dir $bam_file $junc_bed $params.genome $sample
     echo "===> Performing analysis..."
     analyze.py $ref_dir $fpkm $params.genome $sample
+    """
+}
+
+process bam2bigwig {
+    input:
+    set val(sample), file(bam_file) from bam_for_bam2bigwig
+    file ref_chrom_sizes from Channel.fromPath(params.ref_dir + "/" + params.genome + ".chrom.sizes").collect()
+
+    publishDir "${params.output_dir}/$sample/UCSC", mode: 'copy'
+
+    output:
+    file("${sample}.bw") into BAM2BIGIWG_DIR
+
+    script:
+    """
+    bam2bigwig.sh $bam_file $ref_chrom_sizes ${sample}.bw
     """
 }
