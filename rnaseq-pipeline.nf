@@ -95,7 +95,7 @@ if (params.single_end && params.no_replicates) {
         .set {raw_reads_fastq}
 } else if (params.no_replicates) {
     Channel
-        .fromPath(params.fastq_dir +'*.fastq')
+        .fromPath(params.fastq_dir +'/*.fastq')
         .map {file -> [file.baseName, file, 0]}
         .ifEmpty { exit 1, "Cannot find any files in directory!"}
         .set {raw_reads_fastq}
