@@ -23,20 +23,20 @@ parser.add_argument("outname", help="Full path to output file.")
 args = parser.parse_args()
 
 if not os.path.exists(args.refgene_path):
-    print "Reference .bed file does not exist! Exiting..."
+    print("Reference .bed file does not exist! Exiting...")
     exit(1)
 if not os.path.exists(args.junctions_path):
-    print ".bed file containing junctions does not exist! Exiting..."
+    print(".bed file containing junctions does not exist! Exiting...")
     exit(1)
 
 refgene_bed = open(args.refgene_path)
 
-print ">> Running intersectBed to determine junction spans."
+print(">> Running intersectBed to determine junction spans.")
 cmd = "intersectBed -a %s -b %s -wao -f 1" % (args.junctions_path, args.refgene_path)
 intersect_f = open(args.outname + "_intersect.bed", "w+")
 sp.call(cmd.split(" "), stdout=intersect_f)
 
-print ">> Filtering transgene junctions..."
+print(">> Filtering transgene junctions...")
 intersect_f.seek(0)
 lines = intersect_f.readlines()
 total = len(lines)
@@ -59,16 +59,16 @@ for progress, line in enumerate(lines):
 
 tmp_out_f.close()
 sys.stdout.write("\n")
-print ">> Filtering complete. Transgene count: %d | Unknown strand count: %d" % \
-    (transgene_count, unknown_strand_count)
+print(">> Filtering complete. Transgene count: %d | Unknown strand count: %d" % \
+    (transgene_count, unknown_strand_count))
 
 # Since some junctions can map to multiple genes,
 # we need to uniquely extract rows.
-print ">> Removing duplicates..."
+print(">> Removing duplicates...")
 cmd = "awk !seen[$0]++ %s" % (args.outname + "_tmp")
 out_f = open(args.outname, "w+")
 sp.call(cmd.split(" "), stdout=out_f)
 out_f.close()
-print ">> Cleaning up and exiting gracefully..."
+print(">> Cleaning up and exiting gracefully...")
 os.remove(args.outname + "_tmp")
 exit(0)
