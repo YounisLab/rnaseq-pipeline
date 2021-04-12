@@ -48,7 +48,8 @@ Usage: nextflow run rnaseq-pipeline.nf [OPTIONS] --ref_dir <REF_DIR> --fastq_dir
         <GENOME_VERSION>  Human Genome version prefix used in REF_DIR files
         <NUM_CORES>       Number of CPU cores to use in pipeline.
         <OUTPUT_DIR>      Directory to save output from pipeline.
-    Optional args ([Options]):
+
+    Optional args ([OPTIONS]):
         --single_end      Specifies that the --fastq_dir input contains single end reads only.
                           If enabled, files in the --fastq_files directory must be of the form
                           '<SAMPLENAME>_[A-Z].fastq', where [A-Z] refers to statistical replicates.
