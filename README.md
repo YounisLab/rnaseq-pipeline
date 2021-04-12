@@ -27,20 +27,6 @@ docker image build -t rnaseq-pipeline .
 
 ```
 Usage: nextflow run rnaseq-pipeline.nf [OPTIONS] --ref_dir <REF_DIR> --fastq_dir <FASTQ_DIR> --star_index <STAR_INDEX_DIR> --genome <GENOME_VERSION> --cores <NUM_CORES> --output_dir <OUTPUT_DIR>
-    Optional args:
-        --single_end      Specifies that the --fastq_dir input contains single end reads only.
-                          If enabled, files in the --fastq_files directory must be of the form
-                          '<SAMPLENAME>_[A-Z].fastq', where [A-Z] refers to statistical replicates.
-
-                            Example:
-                                SAMPLE_A.fastq SAMPLE_B.fastq SAMPLE_C.fastq SAMPLE_D.fastq
-
-                          This will be run in STAR as:
-                          --readFilesIn SAMPLE_A.fastq,SAMPLE_B.fastq,SAMPLE_C.fastq,SAMPLE_D.fastq
-
-        --no_replicates   Specifies that each .fastq file in the input directory
-                          should be run through the pipeline individually.
-
     Mandatory args:
         <REF_DIR>         Directory containing reference files
         <FASTQ_DIR>       Directory containing .fastq file(s) to run through the pipeline.
@@ -62,4 +48,18 @@ Usage: nextflow run rnaseq-pipeline.nf [OPTIONS] --ref_dir <REF_DIR> --fastq_dir
         <GENOME_VERSION>  Human Genome version prefix used in REF_DIR files
         <NUM_CORES>       Number of CPU cores to use in pipeline.
         <OUTPUT_DIR>      Directory to save output from pipeline.
+    Optional args ([Options]):
+        --single_end      Specifies that the --fastq_dir input contains single end reads only.
+                          If enabled, files in the --fastq_files directory must be of the form
+                          '<SAMPLENAME>_[A-Z].fastq', where [A-Z] refers to statistical replicates.
+
+                            Example:
+                                SAMPLE_A.fastq SAMPLE_B.fastq SAMPLE_C.fastq SAMPLE_D.fastq
+
+                          This will be run in STAR as:
+                          --readFilesIn SAMPLE_A.fastq,SAMPLE_B.fastq,SAMPLE_C.fastq,SAMPLE_D.fastq
+
+        --no_replicates   Specifies that each .fastq file in the input directory
+                          should be run through the pipeline individually.
+        
 ```
