@@ -9,7 +9,7 @@ A nextflow pipeline for aligning, mapping & estimating abundances of RNASeq data
 
 ## Prerequisites
 
-Install [docker CE](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
+Install [nextflow](https://www.nextflow.io/) and [docker CE](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
 
 ## Building
 
